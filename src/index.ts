@@ -3,13 +3,19 @@ interface MetaMaskEthereumProvider {
   once(eventName: string | symbol, listener: (...args: any[]) => void): this;
   on(eventName: string | symbol, listener: (...args: any[]) => void): this;
   off(eventName: string | symbol, listener: (...args: any[]) => void): this;
-  addListener(eventName: string | symbol, listener: (...args: any[]) => void): this;
-  removeListener(eventName: string | symbol, listener: (...args: any[]) => void): this;
+  addListener(
+    eventName: string | symbol,
+    listener: (...args: any[]) => void
+  ): this;
+  removeListener(
+    eventName: string | symbol,
+    listener: (...args: any[]) => void
+  ): this;
   removeAllListeners(event?: string | symbol): this;
 }
 
 interface Window {
-  ethereum?: MetaMaskEthereumProvider;
+  xdc?: MetaMaskEthereumProvider;
 }
 
 export = detectEthereumProvider;
@@ -35,23 +41,17 @@ function detectEthereumProvider<T = MetaMaskEthereumProvider>({
   silent = false,
   timeout = 3000,
 } = {}): Promise<T | null> {
-
   _validateInputs();
 
   let handled = false;
 
   return new Promise((resolve) => {
-    if ((window as Window).ethereum) {
-
+    if ((window as Window).xdc) {
       handleEthereum();
-
     } else {
-
-      window.addEventListener(
-        'ethereum#initialized',
-        handleEthereum,
-        { once: true },
-      );
+      window.addEventListener('ethereum#initialized', handleEthereum, {
+        once: true,
+      });
 
       setTimeout(() => {
         handleEthereum();
@@ -59,7 +59,6 @@ function detectEthereumProvider<T = MetaMaskEthereumProvider>({
     }
 
     function handleEthereum() {
-
       if (handled) {
         return;
       }
@@ -67,15 +66,15 @@ function detectEthereumProvider<T = MetaMaskEthereumProvider>({
 
       window.removeEventListener('ethereum#initialized', handleEthereum);
 
-      const { ethereum } = window as Window;
+      const { xdc } = window as Window;
 
-      if (ethereum && (!mustBeMetaMask || ethereum.isMetaMask)) {
-        resolve(ethereum as unknown as T);
+      if (xdc && (!mustBeMetaMask || xdc.isMetaMask)) {
+        resolve(xdc as unknown as T);
       } else {
-
-        const message = mustBeMetaMask && ethereum
-          ? 'Non-MetaMask window.ethereum detected.'
-          : 'Unable to detect window.ethereum.';
+        const message =
+          mustBeMetaMask && xdc
+            ? 'Non-MetaMask window.ethereum detected.'
+            : 'Unable to detect window.ethereum.';
 
         !silent && console.error('@metamask/detect-provider:', message);
         resolve(null);
@@ -85,13 +84,19 @@ function detectEthereumProvider<T = MetaMaskEthereumProvider>({
 
   function _validateInputs() {
     if (typeof mustBeMetaMask !== 'boolean') {
-      throw new Error(`@metamask/detect-provider: Expected option 'mustBeMetaMask' to be a boolean.`);
+      throw new Error(
+        `@metamask/detect-provider: Expected option 'mustBeMetaMask' to be a boolean.`,
+      );
     }
     if (typeof silent !== 'boolean') {
-      throw new Error(`@metamask/detect-provider: Expected option 'silent' to be a boolean.`);
+      throw new Error(
+        `@metamask/detect-provider: Expected option 'silent' to be a boolean.`,
+      );
     }
     if (typeof timeout !== 'number') {
-      throw new Error(`@metamask/detect-provider: Expected option 'timeout' to be a number.`);
+      throw new Error(
+        `@metamask/detect-provider: Expected option 'timeout' to be a number.`,
+      );
     }
   }
 }

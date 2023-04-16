@@ -1,7 +1,7 @@
 {
-  "name": "@metamask/detect-provider",
-  "version": "2.0.0",
-  "description": "A tiny utility for detecting the MetaMask Ethereum provider, or any EIP 1193-compliant provider.",
+  "name": "@xswap-v3/detect-provider",
+  "version": "0.0.1",
+  "description": "A tiny utility for detecting the XDC provider, or any EIP 1193-compliant provider.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -30,9 +30,9 @@
     "access": "public"
   },
   "keywords": [
-    "ethereum",
+    "xinfin",
     "provider",
-    "metamask",
+    "xdc pay",
     "web3"
   ],
   "bugs": {
